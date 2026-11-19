@@ -1,23 +1,113 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Cover Snap</title>
-<link rel="stylesheet" href="./style.css">
+<title>Vice Cover Studio — GTA 6 Cover Art Maker</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-<main class="app">
-  <section class="controls">
-    <h1>Cover Snap</h1>
-    <p>A photo and a caption, made into a square cover.</p>
-    <label>Photo <input id="photo" type="file" accept="image/*"></label>
-    <label>Caption <input id="caption" type="text" maxlength="40" value="Sunset Heist"></label>
-    <button id="export" type="button">Export PNG 1080 x 1080</button>
-    <p id="status" role="status"></p>
+<header class="topbar">
+  <div class="brand"><span class="brand-mark">★</span> VICE COVER STUDIO</div>
+  <div class="brand-sub">GTA 6-style cover art maker · offline · your photos never leave this machine</div>
+</header>
+
+<main id="editor">
+  <section class="controls" aria-label="Cover controls">
+    <div class="group">
+      <h2>1 · Photos</h2>
+      <p class="hint">Upload your own photos, or start with the built-in samples. One photo can fill several panels.</p>
+      <label class="upload-btn" for="photoUpload">＋ Upload photos</label>
+      <input id="photoUpload" type="file" accept="image/*" multiple hidden>
+      <div class="sample-row">
+        <button type="button" class="chip" data-sample="pier">Sample · Pier</button>
+        <button type="button" class="chip" data-sample="boulevard">Sample · Boulevard</button>
+        <button type="button" class="chip" id="fillAllBtn">Fill all panels with one photo</button>
+      </div>
+      <div class="thumb-row" id="thumbRow" aria-label="Loaded photos"></div>
+    </div>
+
+    <div class="group">
+      <h2>2 · Layout</h2>
+      <div class="btn-grid" id="layoutGrid" role="group" aria-label="Layouts"></div>
+    </div>
+
+    <div class="group">
+      <h2>3 · Sunset / neon grade</h2>
+      <div class="btn-grid" id="gradeGrid" role="group" aria-label="Colour grades"></div>
+    </div>
+
+    <div class="group">
+      <h2>4 · Caption</h2>
+      <label class="field">Title
+        <input id="titleInput" type="text" maxlength="24" value="SUNSET HEIST">
+      </label>
+      <label class="field">Subtitle (neon script)
+        <input id="subtitleInput" type="text" maxlength="40" value="Vice City Nights">
+      </label>
+      <label class="field">Tagline strip
+        <input id="taglineInput" type="text" maxlength="64" value="TWO OUTLAWS · ONE LAST SCORE · NO WAY BACK">
+      </label>
+      <label class="field">Badge text
+        <input id="badgeInput" type="text" maxlength="12" value="WANTED">
+      </label>
+      <label class="field">Heat meter
+        <input id="heatInput" type="range" min="0" max="5" step="1" value="4">
+        <span id="heatLabel">★★★★☆</span>
+      </label>
+      <label class="check"><input id="halftoneInput" type="checkbox" checked> Halftone title block</label>
+    </div>
+
+    <div class="group">
+      <h2>5 · Selected panel</h2>
+      <p class="hint">Click a panel in the preview to select it.</p>
+      <div class="btn-grid small" id="panelGrid" role="group" aria-label="Panels"></div>
+      <label class="field">Photo in this panel
+        <select id="panelPhotoSelect"></select>
+      </label>
+      <label class="field">Zoom <span class="val" id="zoomVal">1.15×</span>
+        <input id="zoomInput" type="range" min="1" max="2.5" step="0.01" value="1.15">
+      </label>
+      <label class="field">Position X
+        <input id="panXInput" type="range" min="0" max="1" step="0.01" value="0.5">
+      </label>
+      <label class="field">Position Y
+        <input id="panYInput" type="range" min="0" max="1" step="0.01" value="0.5">
+      </label>
+    </div>
+
+    <div class="group">
+      <h2>6 · Export PNG</h2>
+      <div class="export-row">
+        <button type="button" class="export-btn" data-export="1080x1080">1080 × 1080</button>
+        <button type="button" class="export-btn" data-export="1080x1350">1080 × 1350</button>
+        <button type="button" class="export-btn" data-export="1920x1080">1920 × 1080</button>
+      </div>
+      <p class="hint" id="exportNote">Ready.</p>
+    </div>
   </section>
-  <canvas id="cover" width="1080" height="1080" aria-label="The cover"></canvas>
+
+  <section class="preview" aria-label="Cover preview">
+    <div class="preview-bar">
+      <span id="sizeLabel">Square · 1080 × 1080</span>
+      <div class="size-tabs" role="group" aria-label="Post size">
+        <button type="button" data-size="square" class="active">Square</button>
+        <button type="button" data-size="portrait">Portrait</button>
+        <button type="button" data-size="landscape">Landscape</button>
+      </div>
+    </div>
+    <div class="canvas-wrap"><canvas id="coverCanvas" width="1080" height="1080"></canvas></div>
+    <p class="preview-hint">Click a panel to crop it · everything is drawn on your machine, nothing is uploaded.</p>
+  </section>
 </main>
-<script type="module" src="./src/main.js"></script>
+
+<div id="coverOnly" hidden>
+  <canvas id="coverCanvasFull" width="1920" height="1080"></canvas>
+</div>
+<div id="exportShot" hidden>
+  <img id="exportShotImg" alt="Exported cover PNG">
+</div>
+
+<script src="cover.js"></script>
 </body>
 </html>
